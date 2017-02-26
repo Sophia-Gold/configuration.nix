@@ -5,32 +5,36 @@
     ./hardware-configuration.nix    
   ];
 
-  # Use the GRUB 2 boot loader.
-  boot.loader.grub.enable = true;
-  boot.loader.grub.version = 2;
-  # boot.loader.grub.efiSupport = true;
-  # boot.loader.grub.efiInstallAsRemovable = true;
-  # boot.loader.efi.efiSysMountPoint = "/boot/efi";
-  # Define on which hard drive you want to install Grub.
-  boot.loader.grub.device = "/dev/sdb"; # or "nodev" for efi only
+  boot.loader.grub = {
+    enable = true;
+    version = 2;
+    device = "/dev/sdb";
+  };
+
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
+  boot.kernelPackages = pkgs.linuxPackages_4_9;
+
+  # fileSystems = {
+  #   "/home/sophia/hdd/" = { 
+  #     device = "dev/sda";
+  #   };
+  # };
 
   networking = {
     hostName = "nixos";
     networkmanager.enable = true;
   };
 
-  # Select internationalisation properties.
   i18n = {
     consoleFont = "Lat2-Terminus16";
     consoleKeyMap = "us";
     defaultLocale = "en_US.UTF-8";
   };
 
-  # Set your time zone.
   time.timeZone = "America/New_York";
 
-  # List packages installed in system profile. To search by name, run:
-  # $ nix-env -qaP | grep wget
   nixpkgs.config = {
     allowUnfree = true;
     import = /root/.nixpkgs/config.nix;
@@ -39,8 +43,12 @@
     wget
     networkmanagerapplet
     dhcpcd
+    hfsprogs
+    dmg2img
+    p7zip
     firefox
     irssi
+    gimp-with-plugins
     git
     vim
     brackets
@@ -48,6 +56,7 @@
     guile
     chicken
     chez
+    pltScheme
     clojure
     leiningen
     maven
@@ -65,6 +74,7 @@
     puredata
     arduino
     processing
+    gnuplot
     xorg.xf86inputsynaptics
     (emacsWithPackages (with emacs24PackagesNg; [
       powerline
@@ -74,28 +84,31 @@
       geiser
       web-mode
       js-comint
+      gnuplot-mode
+      evil
     ])) 
     # unfree
     google-chrome
     dropbox
     spotify
+    skype
     xflux
     (oraclejdk8distro true true)
   ];
 
-  # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
+  # Enable the OpenSSH server.
+  # services.openssh.enable = true;
 
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
+  # Eable CUPS to print documents
+  # services.printing.enable = true;
 
-  # Enable the X11 windowing system.
   services.xserver = {
     enable = true;
     layout = "us";
     xkbOptions = "eurosign:e";
     # synaptics.enable = true;
     desktopManager.default = "gnome3";
+
     # Gnome3 Desktop Environment
     desktopManager.gnome3 = {
       enable = true;
@@ -104,17 +117,18 @@
         pkgs.gnome3.gnome-shell-extensions
       ];
     };
-    # KDE Desktop Environment
+
+    # KDE Desktop Manager
     # displayManager.kdm.enable = true;
     # desktopManager.kde4.enable = true;
-    # XMonad Desktop Environment
+    
+    # XMonad Window Manager
     windowManager.xmonad = {
       enable = true;
       enableContribAndExtras = true;
     };
   };
 
-  # Fonts
   fonts = {
      enableFontDir = true;
      enableGhostscriptFonts = true;
@@ -125,10 +139,10 @@
        unifont # some international languages
        dejavu_fonts
        vistafonts # contains Consolas
+       emojione
      ];
    };
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
   users.extraUsers.guest = {
   };
 
