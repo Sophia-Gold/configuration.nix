@@ -16,7 +16,7 @@
 
   boot.kernelPackages = pkgs.linuxPackages_4_9;
 
-  # fileSystems = {
+  # filesystems = {
   #   "/home/sophia/hdd/" = { 
   #     device = "dev/sda";
   #   };
@@ -38,11 +38,31 @@
   nixpkgs.config = {
     allowUnfree = true;
     import = /root/.nixpkgs/config.nix;
-  };
+    packageOverrides = super: let self = super.pkgs; in
+    {
+      myHaskellEnv = self.haskellPackages.ghcWithHoogle
+                       (haskellPackages: with haskellPackages; [
+                         # libraries
+                         arrows
+                         async 
+                         cgi 
+                         criterion 
+                         ghc-core 
+                         mueval 
+                         prelude-extras
+                         # tools
+                         cabal-install
+                         haskintex
+                       ]);
+      };
+    };
   environment.systemPackages = with pkgs; [
     wget
     networkmanagerapplet
     dhcpcd
+    gnumake
+    pcre
+    pkgconfig
     hfsprogs
     dmg2img
     p7zip
@@ -62,9 +82,9 @@
     maven
     openjdk
     go
-    ghc
-    cabal-install
-    stack
+    myHaskellEnv
+    cabal2nix
+    less
     nodejs
     closurecompiler
     gcc
@@ -75,6 +95,7 @@
     arduino
     processing
     gnuplot
+    anki
     xorg.xf86inputsynaptics
     (emacsWithPackages (with emacs24PackagesNg; [
       powerline
@@ -95,7 +116,12 @@
     xflux
     (oraclejdk8distro true true)
   ];
-
+  environment.shellAliases.ghci = "ghci -ghci-script
+    ${pkgs.writeText "ghci.conf"
+      '':def hoogle \s -> return $ ":! hoogle search -cl --count=15 \"" ++ s ++ "\""'
+        :def doc \s -> return $ ":! hoogle search -cl --info \"" ++ s ++ "\""''
+     }";
+ 
   # Enable the OpenSSH server.
   # services.openssh.enable = true;
 
@@ -146,7 +172,6 @@
   users.extraUsers.guest = {
   };
 
-  # The NixOS release to be compatible with for stateful data such as databases.
   system.stateVersion = "16.09";
 
 }
