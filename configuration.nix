@@ -46,32 +46,37 @@
                          arrows
                          async 
                          cgi 
-                         criterion 
+                         criterion
+                         lens 
                          ghc-core 
-                         mueval 
+                         mueval
+                         either-unwrap 
                          prelude-extras
+                         xmonad
+                         xmonad-extras
+                         xmonad-contrib
                          # tools
                          cabal-install
                          haskintex
                        ]);
-      };
-    };
+   };
+  };
+
   environment.systemPackages = with pkgs; [
-    wget
     networkmanagerapplet
-    dhcpcd
-    gnumake
-    pcre
-    pkgconfig
-    hfsprogs
-    dmg2img
-    p7zip
     firefox
     irssi
     gimp-with-plugins
+    gnuplot
+    libreoffice
+    anki
+    simplescreenrecorder
+    simgrid
     git
     vim
     brackets
+    xorg.xf86inputsynaptics
+    #coding tools
     mitscheme
     guile
     chicken
@@ -84,30 +89,51 @@
     go
     myHaskellEnv
     cabal2nix
-    less
+    ocaml
     nodejs
     closurecompiler
     gcc
     llvm
     clang
+    cmake
+    gnumake
+    boost
     dmd
+    python3
     puredata
     arduino
     processing
-    gnuplot
-    anki
-    xorg.xf86inputsynaptics
+    #system tools
+    wget
+    dhcpcd
+    less
+    rlwrap
+    findutils
+    perf-tools
+    pkgconfig
+    numactl
+    diffutils
+    hfsprogs
+    dmg2img
+    p7zip
     (emacsWithPackages (with emacs24PackagesNg; [
       powerline
       lush-theme
-      clojure-mode
-      haskell-mode
+      cyberpunk-theme
+      magit
       geiser
+      paredit
+      clojure-mode
+      clojure-cheatsheet
+      cider
+      haskell-mode
+      nix-mode
       web-mode
       js-comint
       gnuplot-mode
+      pandoc-mode
       evil
-    ])) 
+    ]))
     # unfree
     google-chrome
     dropbox
@@ -152,7 +178,15 @@
     windowManager.xmonad = {
       enable = true;
       enableContribAndExtras = true;
+      extraPackages = haskellPackages: [
+        haskellPackages.xmonad-contrib
+        haskellPackages.xmonad-extras
+        haskellPackages.xmonad
+      ];
     };
+    windowManager.default = "xmonad";
+    displayManager.sessionCommands = with pkgs; 
+    lib.mkAfter ''xmodmap /path/to/.Xmodmap'';
   };
 
   fonts = {
@@ -172,6 +206,7 @@
   users.extraUsers.guest = {
   };
 
+  # The NixOS release to be compatible with for stateful data such as databases.
   system.stateVersion = "16.09";
 
 }
