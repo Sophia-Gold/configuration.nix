@@ -110,6 +110,7 @@
     rlwrap
     findutils
     perf-tools
+    htop
     pkgconfig
     numactl
     diffutils
