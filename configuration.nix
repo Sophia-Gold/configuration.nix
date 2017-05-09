@@ -1,5 +1,11 @@
 { config, pkgs, ... }:
 
+let 
+    ocamlPackages = pkgs.recurseIntoAttrs pkgs.ocamlPackages_latest;
+    ocamlVersion = (builtins.parseDrvName ocamlPackages.ocaml.name).version;
+    merlinWithEmacsMode = ocamlPackages.merlin.override { withEmacsMode = true; };
+in
+
 {
   imports = [
     ./hardware-configuration.nix    
@@ -34,10 +40,11 @@
   };
 
   time.timeZone = "America/New_York";
-
+ 
   nixpkgs.config = {
     allowUnfree = true;
     import = /root/.nixpkgs/config.nix;
+     
     packageOverrides = super: let self = super.pkgs; in
     {
       myHaskellEnv = self.haskellPackages.ghcWithHoogle
@@ -47,7 +54,8 @@
                          async 
                          cgi 
                          criterion
-                         lens 
+                         lens
+                         enumerator 
                          ghc-core 
                          mueval
                          either-unwrap 
@@ -59,65 +67,84 @@
                          cabal-install
                          haskintex
                        ]);
-   };
+    };
+  };
+  
+  environment.variables = {
+    findlib = "${ocamlPackages.findlib}/lib/ocaml/${ocamlVersion}/site-lib";
   };
 
-  environment.systemPackages = with pkgs; [
-    networkmanagerapplet
-    firefox
-    irssi
-    gimp-with-plugins
-    gnuplot
-    libreoffice
-    anki
-    simplescreenrecorder
-    simgrid
-    git
-    vim
-    brackets
-    xorg.xf86inputsynaptics
-    #coding tools
-    mitscheme
-    guile
-    chicken
-    chez
-    pltScheme
-    clojure
-    leiningen
-    maven
-    openjdk
-    go
-    myHaskellEnv
-    cabal2nix
-    ocaml
-    nodejs
-    closurecompiler
-    gcc
-    llvm
-    clang
-    cmake
-    gnumake
-    boost
-    dmd
-    python3
-    puredata
-    arduino
-    processing
-    #system tools
-    wget
-    dhcpcd
-    less
-    rlwrap
-    findutils
-    perf-tools
-    htop
-    pkgconfig
-    numactl
-    diffutils
-    hfsprogs
-    dmg2img
-    p7zip
-    (emacsWithPackages (with emacs24PackagesNg; [
+  environment.systemPackages = with pkgs;
+    [
+      networkmanagerapplet
+      firefox
+      irssi
+      gimp-with-plugins
+      gnuplot
+      libreoffice
+      anki
+      simplescreenrecorder
+      simgrid
+      git
+      vim
+      brackets
+      xorg.xf86inputsynaptics
+    ] ++
+    [ 
+      # Dev Stuff
+      mitscheme
+      guile
+      chicken
+      chez
+      pltScheme
+      clojure
+      leiningen
+      maven
+      openjdk
+      go
+      myHaskellEnv
+      cabal2nix
+      nodejs
+      closurecompiler
+      gcc
+      llvm
+      clang
+      cmake
+      gnumake
+      boost
+      dmd
+      python3
+      puredata
+      arduino
+      processing
+      ocaml
+    ] ++
+    (with ocamlPackages; [
+      camlp4
+      core
+      core_extended
+      findlib
+      merlinWithEmacsMode
+      pa_ounit
+      pa_test
+    ]) ++
+    [ 
+      # System Tools
+      wget
+      dhcpcd
+      less
+      rlwrap
+      findutils
+      perf-tools
+      htop
+      pkgconfig
+      numactl
+      diffutils
+      hfsprogs
+      dmg2img
+      p7zip
+    ] ++
+    [(emacsWithPackages (with emacs24PackagesNg; [
       powerline
       lush-theme
       cyberpunk-theme
@@ -128,21 +155,24 @@
       clojure-cheatsheet
       cider
       haskell-mode
+      tuareg
       nix-mode
       web-mode
       js-comint
       gnuplot-mode
       pandoc-mode
       evil
-    ]))
-    # unfree
-    google-chrome
-    dropbox
-    spotify
-    skype
-    xflux
-    (oraclejdk8distro true true)
-  ];
+    ]))] ++
+    [ 
+      # unfree
+      google-chrome
+      dropbox
+      spotify
+      skype
+      xflux
+      (oraclejdk8distro true true)
+    ];
+
   environment.shellAliases.ghci = "ghci -ghci-script
     ${pkgs.writeText "ghci.conf"
       '':def hoogle \s -> return $ ":! hoogle search -cl --count=15 \"" ++ s ++ "\""'
@@ -160,6 +190,7 @@
     layout = "us";
     xkbOptions = "eurosign:e";
     # synaptics.enable = true;
+    displayManager.gdm.enable = true;
     desktopManager.default = "gnome3";
 
     # Gnome3 Desktop Environment
@@ -172,7 +203,6 @@
     };
 
     # KDE Desktop Manager
-    # displayManager.kdm.enable = true;
     # desktopManager.kde4.enable = true;
     
     # XMonad Window Manager
@@ -207,7 +237,7 @@
   users.extraUsers.guest = {
   };
 
-  # The NixOS release to be compatible with for stateful data such as databases.
+  # NixOS Version
   system.stateVersion = "16.09";
 
 }
