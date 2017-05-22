@@ -55,10 +55,13 @@ in
                          cgi 
                          criterion
                          lens
-                         enumerator 
+                         enumerator
+                         generic-deriving
+                         logict
+                         either
+                         either-unwrap
                          ghc-core 
-                         mueval
-                         either-unwrap 
+                         mueval 
                          prelude-extras
                          xmonad
                          xmonad-extras
@@ -88,6 +91,7 @@ in
       git
       vim
       brackets
+      marp
       xorg.xf86inputsynaptics
     ] ++
     [ 
@@ -206,16 +210,16 @@ in
     # desktopManager.kde4.enable = true;
     
     # XMonad Window Manager
-    windowManager.xmonad = {
-      enable = true;
-      enableContribAndExtras = true;
-      extraPackages = haskellPackages: [
-        haskellPackages.xmonad-contrib
-        haskellPackages.xmonad-extras
-        haskellPackages.xmonad
-      ];
-    };
-    windowManager.default = "xmonad";
+    #windowManager.xmonad = {
+    #  enable = true;
+    #  enableContribAndExtras = true;
+    #  extraPackages = haskellPackages: [
+    #    haskellPackages.xmonad-contrib
+    #    haskellPackages.xmonad-extras
+    #    haskellPackages.xmonad
+    #  ];
+    #};
+    #windowManager.default = "xmonad";
     displayManager.sessionCommands = with pkgs; 
     lib.mkAfter ''xmodmap /path/to/.Xmodmap'';
   };
