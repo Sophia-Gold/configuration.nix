@@ -40,10 +40,9 @@ in
   };
 
   time.timeZone = "America/New_York";
- 
+
   nixpkgs.config = {
     allowUnfree = true;
-    import = /root/.nixpkgs/config.nix;
      
     packageOverrides = super: let self = super.pkgs; in
     {
@@ -70,14 +69,24 @@ in
                          cabal-install
                          haskintex
                        ]);
+       };
+    # import /root/.nixpkgs/config.nix;
     };
-  };
-  
+          
   environment.variables = {
     findlib = "${ocamlPackages.findlib}/lib/ocaml/${ocamlVersion}/site-lib";
   };
 
   environment.systemPackages = with pkgs;
+    [ 
+      # unfree
+      google-chrome
+      dropbox
+      # spotify
+      skype
+      xflux
+      (oraclejdk8distro true true)
+    ] ++
     [
       networkmanagerapplet
       firefox
@@ -103,6 +112,7 @@ in
       pltScheme
       clojure
       leiningen
+      boot
       maven
       openjdk
       go
@@ -126,16 +136,17 @@ in
     (with ocamlPackages; [
       camlp4
       core
-      core_extended
+      # core_extended
       findlib
       merlinWithEmacsMode
       pa_ounit
-      pa_test
+      # pa_test
     ]) ++
     [ 
       # System Tools
       wget
       dhcpcd
+      file
       less
       rlwrap
       findutils
@@ -147,8 +158,9 @@ in
       hfsprogs
       dmg2img
       p7zip
+      dpkg
     ] ++
-    [(emacsWithPackages (with emacs24PackagesNg; [
+    [(emacsWithPackages (with emacs25PackagesNg; [
       powerline
       lush-theme
       cyberpunk-theme
@@ -166,16 +178,7 @@ in
       gnuplot-mode
       pandoc-mode
       evil
-    ]))] ++
-    [ 
-      # unfree
-      google-chrome
-      dropbox
-      spotify
-      skype
-      xflux
-      (oraclejdk8distro true true)
-    ];
+    ]))];
 
   environment.shellAliases.ghci = "ghci -ghci-script
     ${pkgs.writeText "ghci.conf"
