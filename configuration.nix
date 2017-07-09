@@ -56,12 +56,14 @@ in
                          lens
                          enumerator
                          generic-deriving
+                         singletons
                          logict
                          either
                          either-unwrap
                          ghc-core 
                          mueval 
                          prelude-extras
+                         protolude
                          xmonad
                          xmonad-extras
                          xmonad-contrib
@@ -82,7 +84,7 @@ in
       # unfree
       google-chrome
       dropbox
-      # spotify
+      spotify
       skype
       xflux
       (oraclejdk8distro true true)
@@ -132,6 +134,7 @@ in
       arduino
       processing
       ocaml
+      heroku
     ] ++
     (with ocamlPackages; [
       camlp4
@@ -139,8 +142,7 @@ in
       # core_extended
       findlib
       merlinWithEmacsMode
-      pa_ounit
-      # pa_test
+      js_build_tools
     ]) ++
     [ 
       # System Tools
@@ -155,8 +157,11 @@ in
       pkgconfig
       numactl
       diffutils
+      screen
+      tmux
       hfsprogs
       dmg2img
+      mkinitcpio-nfs-utils
       p7zip
       dpkg
     ] ++
