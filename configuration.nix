@@ -20,8 +20,6 @@ in
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  boot.kernelPackages = pkgs.linuxPackages_4_9;
-
   # filesystems = {
   #   "/home/sophia/hdd/" = { 
   #     device = "dev/sda";
@@ -146,6 +144,7 @@ in
     ]) ++
     [ 
       # System Tools
+      nixops
       wget
       dhcpcd
       file
@@ -169,6 +168,7 @@ in
       powerline
       lush-theme
       cyberpunk-theme
+      nlinum
       magit
       geiser
       paredit
@@ -179,6 +179,7 @@ in
       tuareg
       nix-mode
       web-mode
+      js2-mode
       js-comint
       gnuplot-mode
       pandoc-mode
