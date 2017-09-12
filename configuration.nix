@@ -81,7 +81,7 @@ in
     [ 
       # unfree
       google-chrome
-      dropbox
+      #dropbox
       spotify
       skype
       xflux
@@ -101,6 +101,8 @@ in
       vim
       brackets
       marp
+      gifsicle
+      gnome3.zenity
       xorg.xf86inputsynaptics
     ] ++
     [ 
@@ -165,9 +167,10 @@ in
       dpkg
     ] ++
     [(emacsWithPackages (with emacs25PackagesNg; [
-      powerline
+      solarized-theme
       lush-theme
       cyberpunk-theme
+      powerline
       nlinum
       magit
       geiser
@@ -208,27 +211,27 @@ in
 
     # Gnome3 Desktop Environment
     desktopManager.gnome3 = {
-      enable = true;
-      sessionPath = [
-        pkgs.gnome3.gnome_shell
-        pkgs.gnome3.gnome-shell-extensions
-      ];
+     enable = true;
+     sessionPath = [
+      pkgs.gnome3.gnome_shell
+      pkgs.gnome3.gnome-shell-extensions
+     ];
     };
 
     # KDE Desktop Manager
     # desktopManager.kde4.enable = true;
     
     # XMonad Window Manager
-    #windowManager.xmonad = {
-    #  enable = true;
-    #  enableContribAndExtras = true;
-    #  extraPackages = haskellPackages: [
-    #    haskellPackages.xmonad-contrib
-    #    haskellPackages.xmonad-extras
-    #    haskellPackages.xmonad
-    #  ];
-    #};
-    #windowManager.default = "xmonad";
+    windowManager.xmonad = {
+      enable = true;
+      enableContribAndExtras = true;
+      extraPackages = haskellPackages: [
+       haskellPackages.xmonad-contrib
+       haskellPackages.xmonad-extras
+       haskellPackages.xmonad
+     ];
+    };
+    windowManager.default = "xmonad";
     displayManager.sessionCommands = with pkgs; 
     lib.mkAfter ''xmodmap /path/to/.Xmodmap'';
   };
