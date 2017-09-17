@@ -102,7 +102,6 @@ in
       brackets
       marp
       gifsicle
-      gnome3.zenity
       xorg.xf86inputsynaptics
     ] ++
     [ 
@@ -223,17 +222,15 @@ in
     
     # XMonad Window Manager
     windowManager.xmonad = {
-      enable = true;
-      enableContribAndExtras = true;
-      extraPackages = haskellPackages: [
-       haskellPackages.xmonad-contrib
-       haskellPackages.xmonad-extras
-       haskellPackages.xmonad
+     enable = true;
+     enableContribAndExtras = true;
+     extraPackages = haskellPackages: [
+      haskellPackages.xmonad-contrib
+      haskellPackages.xmonad-extras
+      haskellPackages.xmonad
      ];
     };
     windowManager.default = "xmonad";
-    displayManager.sessionCommands = with pkgs; 
-    lib.mkAfter ''xmodmap /path/to/.Xmodmap'';
   };
 
   fonts = {
