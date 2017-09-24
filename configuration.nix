@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ stdenv, requireFile, config, pkgs, ... }:
 
 let 
     ocamlPackages = pkgs.recurseIntoAttrs pkgs.ocamlPackages_latest;
@@ -19,6 +19,8 @@ in
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  # boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # filesystems = {
   #   "/home/sophia/hdd/" = { 
@@ -42,9 +44,9 @@ in
   nixpkgs.config = {
     allowUnfree = true;
      
-    packageOverrides = super: let self = super.pkgs; in
-    {
-      myHaskellEnv = self.haskellPackages.ghcWithHoogle
+    packageOverrides = pkgs: {
+
+      myHaskellEnv = pkgs.haskellPackages.ghcWithHoogle
                        (haskellPackages: with haskellPackages; [
                          # libraries
                          arrows
@@ -62,16 +64,48 @@ in
                          mueval 
                          prelude-extras
                          protolude
-                         xmonad
-                         xmonad-extras
-                         xmonad-contrib
                          # tools
                          cabal-install
                          haskintex
                        ]);
-       };
-    # import /root/.nixpkgs/config.nix;
-    };
+                       
+      oraclejdk8distro = let
+        abortArch = abort "jdk requires i686-linux, x86_64-linux, or armv7l-linux";
+        productVersion = "8";
+        patchVersion = "144";
+        downloadUrl = http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html;
+        sha256_i686 = "1i5pginc65xl5vxzwid21ykakmfkqn59v3g01vpr94v28w30jk32";
+        sha256_x86_64 = "1r5axvr8dg2qmr4zjanj73sk9x50m7p0w3vddz8c6ckgav7438z8";
+        sha256_armv7l = "10r3nyssx8piyjaspravwgj2bnq4537041pn0lz4fk5b3473kgfb";
+        jceName = "jce_policy-8.zip";
+        jceDownloadUrl = http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html;
+        sha256JCE = "0n8b6b8qmwb14lllk2lk1q1ahd3za9fnjigz5xn65mpg48whl0pk";
+      in pkgs.oraclejdk8distro.overrideAttrs (oldAttrs: {
+        name = "oraclejdk-${productVersion}u${patchVersion}";
+        src =
+          if stdenv.system == "i686-linux" then
+            requireFile {
+              name = "jdk-${productVersion}u${patchVersion}-linux-i586.tar.gz";
+              url = downloadUrl;
+              sha256 = sha256_i686;
+            }
+          else if stdenv.system == "x86_64-linux" then
+            requireFile {
+              name = "jdk-${productVersion}u${patchVersion}-linux-x64.tar.gz";
+              url = downloadUrl;
+              sha256 = sha256_x86_64;
+            }
+          else if stdenv.system == "armv7l-linux" then
+            requireFile {
+              name = "jdk-${productVersion}u${patchVersion}-linux-arm32-vfp-hflt.tar.gz";
+              url = downloadUrl;
+              sha256 = sha256_armv7l;
+            }
+          else
+            abortArch;
+      });
+   };
+  };
           
   environment.variables = {
     findlib = "${ocamlPackages.findlib}/lib/ocaml/${ocamlVersion}/site-lib";
@@ -81,11 +115,11 @@ in
     [ 
       # unfree
       google-chrome
-      #dropbox
+      dropbox
       spotify
       skype
       xflux
-      (oraclejdk8distro true true)
+      (oraclejdk8distro true true) 
     ] ++
     [
       networkmanagerapplet
@@ -138,7 +172,6 @@ in
     (with ocamlPackages; [
       camlp4
       core
-      # core_extended
       findlib
       merlinWithEmacsMode
       js_build_tools
@@ -206,6 +239,7 @@ in
     xkbOptions = "eurosign:e";
     # synaptics.enable = true;
     displayManager.gdm.enable = true;
+    # displayManager.lightdm.enable = true;
     desktopManager.default = "gnome3";
 
     # Gnome3 Desktop Environment
