@@ -46,6 +46,10 @@ in
      
     packageOverrides = pkgs: {
 
+      packageKit = pkgs.packageKit.override {
+        enableNixBackend = false;
+      };
+
       myHaskellEnv = pkgs.haskellPackages.ghcWithHoogle
                        (haskellPackages: with haskellPackages; [
                          # libraries
@@ -68,7 +72,7 @@ in
                          cabal-install
                          haskintex
                        ]);
-                       
+
       oraclejdk8distro = let
         abortArch = abort "jdk requires i686-linux, x86_64-linux, or armv7l-linux";
         productVersion = "8";
