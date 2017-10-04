@@ -20,7 +20,7 @@ in
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # filesystems = {
   #   "/home/sophia/hdd/" = { 
@@ -68,6 +68,7 @@ in
                          mueval 
                          prelude-extras
                          protolude
+                         idris
                          # tools
                          cabal-install
                          haskintex
@@ -108,7 +109,7 @@ in
           else
             abortArch;
       });
-   };
+    };
   };
           
   environment.variables = {
@@ -140,7 +141,7 @@ in
       brackets
       marp
       gifsicle
-      xorg.xf86inputsynaptics
+      # xorg.xf86inputsynaptics
     ] ++
     [ 
       # Dev Stuff
@@ -216,6 +217,7 @@ in
       cider
       haskell-mode
       tuareg
+      idris-mode
       nix-mode
       web-mode
       js2-mode
@@ -242,8 +244,9 @@ in
     layout = "us";
     xkbOptions = "eurosign:e";
     # synaptics.enable = true;
-    displayManager.gdm.enable = true;
-    # displayManager.lightdm.enable = true;
+    videoDriver = "nvidia";
+    # displayManager.gdm.enable = true;
+    displayManager.lightdm.enable = true;
     desktopManager.default = "gnome3";
 
     # Gnome3 Desktop Environment
