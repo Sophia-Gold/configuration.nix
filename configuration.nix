@@ -15,6 +15,7 @@ in
     enable = true;
     version = 2;
     device = "/dev/sdb";
+    efiSupport = true;
   };
 
   boot.loader.systemd-boot.enable = true;
@@ -39,11 +40,12 @@ in
     defaultLocale = "en_US.UTF-8";
   };
 
-  time.timeZone = "America/New_York";
+  time.timeZone = "US/Eastern";
 
   nixpkgs.config = {
     allowUnfree = true;
-     
+    # allowBroken = true;
+ 
     packageOverrides = pkgs: {
 
       packageKit = pkgs.packageKit.override {
@@ -73,42 +75,6 @@ in
                          cabal-install
                          haskintex
                        ]);
-
-      oraclejdk8distro = let
-        abortArch = abort "jdk requires i686-linux, x86_64-linux, or armv7l-linux";
-        productVersion = "8";
-        patchVersion = "144";
-        downloadUrl = http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html;
-        sha256_i686 = "1i5pginc65xl5vxzwid21ykakmfkqn59v3g01vpr94v28w30jk32";
-        sha256_x86_64 = "1r5axvr8dg2qmr4zjanj73sk9x50m7p0w3vddz8c6ckgav7438z8";
-        sha256_armv7l = "10r3nyssx8piyjaspravwgj2bnq4537041pn0lz4fk5b3473kgfb";
-        jceName = "jce_policy-8.zip";
-        jceDownloadUrl = http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html;
-        sha256JCE = "0n8b6b8qmwb14lllk2lk1q1ahd3za9fnjigz5xn65mpg48whl0pk";
-      in pkgs.oraclejdk8distro.overrideAttrs (oldAttrs: {
-        name = "oraclejdk-${productVersion}u${patchVersion}";
-        src =
-          if stdenv.system == "i686-linux" then
-            requireFile {
-              name = "jdk-${productVersion}u${patchVersion}-linux-i586.tar.gz";
-              url = downloadUrl;
-              sha256 = sha256_i686;
-            }
-          else if stdenv.system == "x86_64-linux" then
-            requireFile {
-              name = "jdk-${productVersion}u${patchVersion}-linux-x64.tar.gz";
-              url = downloadUrl;
-              sha256 = sha256_x86_64;
-            }
-          else if stdenv.system == "armv7l-linux" then
-            requireFile {
-              name = "jdk-${productVersion}u${patchVersion}-linux-arm32-vfp-hflt.tar.gz";
-              url = downloadUrl;
-              sha256 = sha256_armv7l;
-            }
-          else
-            abortArch;
-      });
     };
   };
           
@@ -127,7 +93,11 @@ in
       (oraclejdk8distro true true) 
     ] ++
     [
+      patchelf
       networkmanagerapplet
+      pass
+      browserpass
+      gnupg1
       firefox
       irssi
       gimp-with-plugins
@@ -156,6 +126,7 @@ in
       maven
       openjdk
       go
+      go2nix
       myHaskellEnv
       cabal2nix
       nodejs
@@ -172,7 +143,7 @@ in
       arduino
       processing
       ocaml
-      heroku
+      # heroku
     ] ++
     (with ocamlPackages; [
       camlp4
@@ -197,6 +168,7 @@ in
       diffutils
       screen
       tmux
+      xorg.libpciaccess
       hfsprogs
       dmg2img
       mkinitcpio-nfs-utils
@@ -242,7 +214,7 @@ in
   services.xserver = {
     enable = true;
     layout = "us";
-    xkbOptions = "eurosign:e";
+    xkbOptions = "ctrl:nocaps";
     # synaptics.enable = true;
     videoDriver = "nvidia";
     # displayManager.gdm.enable = true;
