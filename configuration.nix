@@ -197,6 +197,7 @@ in
       gnuplot-mode
       pandoc-mode
       evil
+      go-mode
     ]))];
 
   environment.shellAliases.ghci = "ghci -ghci-script
