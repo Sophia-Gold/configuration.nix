@@ -143,6 +143,7 @@ in
       arduino
       processing
       ocaml
+      docker
       # heroku
     ] ++
     (with ocamlPackages; [
@@ -174,6 +175,7 @@ in
       mkinitcpio-nfs-utils
       p7zip
       dpkg
+      jq
     ] ++
     [(emacsWithPackages (with emacs25PackagesNg; [
       solarized-theme
@@ -198,6 +200,14 @@ in
       pandoc-mode
       evil
       go-mode
+      exec-path-from-shell
+      rainbow-mode
+      rainbow-delimiters
+      rainbow-identifiers
+      rainbow-blocks
+      json-mode
+      yaml-mode
+      highlight-indentation
     ]))];
 
   environment.shellAliases.ghci = "ghci -ghci-script
