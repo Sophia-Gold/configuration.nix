@@ -110,7 +110,10 @@ in
       vim
       brackets
       marp
+      graphviz
       gifsicle
+      vlc
+      rhythmbox
       # xorg.xf86inputsynaptics
     ] ++
     [ 
@@ -128,6 +131,7 @@ in
       go
       go2nix
       myHaskellEnv
+      stack
       cabal2nix
       nodejs
       closurecompiler
@@ -176,6 +180,7 @@ in
       p7zip
       dpkg
       jq
+      tshark
     ] ++
     [(emacsWithPackages (with emacs25PackagesNg; [
       solarized-theme
@@ -208,6 +213,7 @@ in
       json-mode
       yaml-mode
       highlight-indentation
+      pcap-mode
     ]))];
 
   environment.shellAliases.ghci = "ghci -ghci-script
@@ -228,8 +234,8 @@ in
     xkbOptions = "ctrl:nocaps";
     # synaptics.enable = true;
     videoDriver = "nvidia";
-    # displayManager.gdm.enable = true;
-    displayManager.lightdm.enable = true;
+    displayManager.gdm.enable = true;
+    # displayManager.lightdm.enable = true;
     desktopManager.default = "gnome3";
 
     # Gnome3 Desktop Environment
