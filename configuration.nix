@@ -44,7 +44,7 @@ in
 
   nixpkgs.config = {
     allowUnfree = true;
-    # allowBroken = true;
+    allowBroken = true;
  
     packageOverrides = pkgs: {
 
@@ -140,6 +140,7 @@ in
       clang
       cmake
       gnumake
+      gnum4
       boost
       dmd
       python3
@@ -147,15 +148,21 @@ in
       arduino
       processing
       ocaml
+      opam
+      jbuilder
       docker
       # heroku
     ] ++
     (with ocamlPackages; [
-      camlp4
+      async
       core
-      findlib
-      merlinWithEmacsMode
+      js_of_ocaml
+      js_of_ocaml-ppx
       js_build_tools
+      merlinWithEmacsMode
+      utop
+      findlib
+      yojson
     ]) ++
     [ 
       # System Tools
@@ -195,8 +202,10 @@ in
       clojure-cheatsheet
       cider
       haskell-mode
-      tuareg
       idris-mode
+      tuareg
+      opam
+      # ocp-indent
       nix-mode
       web-mode
       js2-mode
@@ -214,6 +223,7 @@ in
       yaml-mode
       highlight-indentation
       pcap-mode
+      markdown-mode
     ]))];
 
   environment.shellAliases.ghci = "ghci -ghci-script
