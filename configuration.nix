@@ -11,15 +11,18 @@ in
     ./hardware-configuration.nix    
   ];
 
-  boot.loader.grub = {
-    enable = true;
-    version = 2;
-    device = "/dev/sdb";
-    efiSupport = true;
+  boot.loader = {
+    grub = {
+      enable = true;
+      device = "/dev/sdb";
+      # efiSupport = true;
+    };
+    # efi = {
+    #   efiSysMountPoint = "/boot";
+    #   canTouchEfiVariables = true;
+    # };
+    # systemd-boot.enable = true;
   };
-
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
@@ -57,7 +60,7 @@ in
                          # libraries
                          arrows
                          async 
-                         cgi 
+                         # cgi 
                          criterion
                          lens
                          enumerator
@@ -88,9 +91,9 @@ in
       google-chrome
       dropbox
       spotify
-      skype
+      # skype
       xflux
-      (oraclejdk8distro true true) 
+      # (oraclejdk8distro true true) 
     ] ++
     [
       patchelf
@@ -141,6 +144,7 @@ in
       cmake
       gnumake
       gnum4
+      gmp
       boost
       dmd
       python3
@@ -151,18 +155,20 @@ in
       opam
       jbuilder
       docker
-      # heroku
+      heroku
     ] ++
     (with ocamlPackages; [
-      async
-      core
+      # async
+      # core
       js_of_ocaml
       js_of_ocaml-ppx
-      js_build_tools
+      # js_build_tools
       merlinWithEmacsMode
-      utop
+      # utop
       findlib
       yojson
+      zarith
+      # ocp-indent
     ]) ++
     [ 
       # System Tools
@@ -188,6 +194,7 @@ in
       dpkg
       jq
       tshark
+      pciutils
     ] ++
     [(emacsWithPackages (with emacs25PackagesNg; [
       solarized-theme
@@ -205,7 +212,6 @@ in
       idris-mode
       tuareg
       opam
-      # ocp-indent
       nix-mode
       web-mode
       js2-mode
@@ -213,7 +219,6 @@ in
       gnuplot-mode
       pandoc-mode
       evil
-      go-mode
       exec-path-from-shell
       rainbow-mode
       rainbow-delimiters
@@ -238,14 +243,21 @@ in
   # Eable CUPS to print documents
   # services.printing.enable = true;
 
+  # hardware.bumblebee = {
+  #  enable = true;
+  #  pmMethod = "bbswitch";
+  #  driver = "nvidia";
+  #  group = "video";
+  #};
+
   services.xserver = {
     enable = true;
     layout = "us";
     xkbOptions = "ctrl:nocaps";
     # synaptics.enable = true;
-    videoDriver = "nvidia";
-    displayManager.gdm.enable = true;
-    # displayManager.lightdm.enable = true;
+    videoDriver = "intel";
+    # displayManager.gdm.enable = true;
+    displayManager.lightdm.enable = true;
     desktopManager.default = "gnome3";
 
     # Gnome3 Desktop Environment
@@ -261,16 +273,16 @@ in
     # desktopManager.kde4.enable = true;
     
     # XMonad Window Manager
-    windowManager.xmonad = {
-     enable = true;
-     enableContribAndExtras = true;
-     extraPackages = haskellPackages: [
-      haskellPackages.xmonad-contrib
-      haskellPackages.xmonad-extras
-      haskellPackages.xmonad
-     ];
-    };
-    windowManager.default = "xmonad";
+    # windowManager.xmonad = {
+    #   enable = true;
+    #  enableContribAndExtras = true;
+    # extraPackages = haskellPackages: [
+    #   haskellPackages.xmonad-contrib
+    #   haskellPackages.xmonad-extras
+    #   haskellPackages.xmonad
+    #   ];
+    # };
+    # windowManager.default = "xmonad";
   };
 
   fonts = {
@@ -291,6 +303,6 @@ in
   };
 
   # NixOS Version
-  system.stateVersion = "16.09";
+  system.stateVersion = "18.03";
 
 }
