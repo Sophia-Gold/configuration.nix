@@ -116,7 +116,7 @@ in
     [ 
       # unfree
       google-chrome
-      # dropbox
+      dropbox
       spotify
       # skype
       xflux
@@ -173,6 +173,7 @@ in
       gnumake
       gnum4
       gmp
+      fftw
       boost
       dmd
       python3
@@ -187,16 +188,18 @@ in
     ] ++
     (with ocamlPackages; [
       # async
+      lwt3
       # core
       js_of_ocaml
       js_of_ocaml-ppx
-      # js_build_tools
       merlinWithEmacsMode
       # utop
       findlib
       yojson
       zarith
-      # ocp-indent
+      batteries
+      ocpIndent
+      # ppx_expect
     ]) ++
     [ 
       # System Tools
