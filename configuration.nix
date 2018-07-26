@@ -11,20 +11,46 @@ in
     ./hardware-configuration.nix    
   ];
 
-  boot.loader = {
-    grub = {
-      enable = true;
-      device = "/dev/sdb";
-      # efiSupport = true;
+  boot = { 
+    loader = {
+      grub = {
+        enable = true;
+        device = "/dev/sdb";
+        # efiSupport = true;
+      };
+      # efi = {
+      #   efiSysMountPoint = "/boot";
+      #   canTouchEfiVariables = true;
+      # };
+      # systemd-boot.enable = true;
     };
-    # efi = {
-    #   efiSysMountPoint = "/boot";
-    #   canTouchEfiVariables = true;
-    # };
-    # systemd-boot.enable = true;
-  };
 
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+    kernelPackages = pkgs.linuxPackages_latest;
+  
+    extraModulePackages = [ config.boot.kernelPackages.bbswitch ];   
+
+    blacklistedKernelModules = [ "nouveau" "nvidia" ];
+
+    kernelParams = [
+      "acpi_osi=!" 
+      ''acpi_osi="Windows 2009"''
+      "nvidia-drm.modeset=1"
+    ];
+ 
+    initrd.availableKernelModules = [
+      "xkhci_pci"
+      "ahci"
+      "usb_storage"
+      "sd_mod"
+      "sr_mod"
+      "rtsx_pci_sdmmc"
+      "nvidia"
+      "nvidia_modeset"
+      "nvidia_uvm"
+      "nvidia_drm"    
+    ];
+
+  };
 
   # filesystems = {
   #   "/home/sophia/hdd/" = { 
@@ -81,7 +107,8 @@ in
     };
   };
           
-  environment.variables = {
+  environment.variables = { 
+    __GLVND_DISALLOW_PATCHING = "1";
     findlib = "${ocamlPackages.findlib}/lib/ocaml/${ocamlVersion}/site-lib";
   };
 
@@ -89,11 +116,11 @@ in
     [ 
       # unfree
       google-chrome
-      dropbox
+      # dropbox
       spotify
       # skype
       xflux
-      # (oraclejdk8distro true true) 
+      (oraclejdk8distro true true) 
     ] ++
     [
       patchelf
@@ -117,6 +144,7 @@ in
       gifsicle
       vlc
       rhythmbox
+      ispell
       # xorg.xf86inputsynaptics
     ] ++
     [ 
@@ -195,6 +223,9 @@ in
       jq
       tshark
       pciutils
+      parted
+      gparted
+      binutils
     ] ++
     [(emacsWithPackages (with emacs25PackagesNg; [
       solarized-theme
@@ -243,21 +274,22 @@ in
   # Eable CUPS to print documents
   # services.printing.enable = true;
 
-  # hardware.bumblebee = {
-  #  enable = true;
-  #  pmMethod = "bbswitch";
-  #  driver = "nvidia";
-  #  group = "video";
-  #};
+  hardware.bumblebee = {
+    enable = true;
+    # pmMethod = "bbswitch";
+    driver = "nvidia";
+    group = "video";
+  };
 
   services.xserver = {
     enable = true;
     layout = "us";
     xkbOptions = "ctrl:nocaps";
     # synaptics.enable = true;
-    videoDriver = "intel";
+    # videoDriver = "nvidia";
     # displayManager.gdm.enable = true;
     displayManager.lightdm.enable = true;
+    # displayManager.sddm.enable = true;
     desktopManager.default = "gnome3";
 
     # Gnome3 Desktop Environment
