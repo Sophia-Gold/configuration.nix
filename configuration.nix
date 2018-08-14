@@ -1,4 +1,4 @@
-{ stdenv, requireFile, config, pkgs, ... }:
+{ config, pkgs, ... }:
 
 let 
     ocamlPackages = pkgs.recurseIntoAttrs pkgs.ocamlPackages_latest;
@@ -9,6 +9,7 @@ in
 {
   imports = [
     ./hardware-configuration.nix    
+    ./opam2nix-packages.nix
   ];
 
   boot = { 
@@ -73,8 +74,8 @@ in
 
   nixpkgs.config = {
     allowUnfree = true;
-    allowBroken = true;
- 
+    allowBroken = true; 
+
     packageOverrides = pkgs: {
 
       packageKit = pkgs.packageKit.override {
@@ -104,7 +105,7 @@ in
                          cabal-install
                          haskintex
                        ]);
-    };
+      };
   };
           
   environment.variables = { 
@@ -185,6 +186,8 @@ in
       jbuilder
       docker
       heroku
+      pari
+      rustup
     ] ++
     (with ocamlPackages; [
       # async
@@ -263,6 +266,8 @@ in
       highlight-indentation
       pcap-mode
       markdown-mode
+      rust-mode
+      toml-mode
     ]))];
 
   environment.shellAliases.ghci = "ghci -ghci-script
