@@ -14,16 +14,11 @@ in
 
   boot = { 
     loader = {
-      grub = {
-        enable = true;
-        device = "/dev/sdb";
-        # efiSupport = true;
+      efi = {
+        efiSysMountPoint = "/boot";
+        canTouchEfiVariables = true;
       };
-      # efi = {
-      #   efiSysMountPoint = "/boot";
-      #   canTouchEfiVariables = true;
-      # };
-      # systemd-boot.enable = true;
+      systemd-boot.enable = true;
     };
 
     kernelPackages = pkgs.linuxPackages_latest;
@@ -53,14 +48,8 @@ in
 
   };
 
-  # filesystems = {
-  #   "/home/sophia/hdd/" = { 
-  #     device = "dev/sda";
-  #   };
-  # };
-
   networking = {
-    hostName = "nixos";
+    hostName = "_";
     networkmanager.enable = true;
   };
 
