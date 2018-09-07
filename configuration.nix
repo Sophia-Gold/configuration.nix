@@ -9,7 +9,7 @@ in
 {
   imports = [
     ./hardware-configuration.nix    
-    ./opam2nix-packages.nix
+    # ./opam2nix-packages.nix
   ];
 
   boot = { 
@@ -84,10 +84,8 @@ in
 
       myHaskellEnv = pkgs.haskellPackages.ghcWithHoogle
                        (haskellPackages: with haskellPackages; [
-                         # libraries
                          arrows
                          async 
-                         # cgi 
                          criterion
                          lens
                          enumerator
@@ -101,7 +99,6 @@ in
                          prelude-extras
                          protolude
                          idris
-                         # tools
                          cabal-install
                          haskintex
                        ]);
@@ -146,7 +143,7 @@ in
       vlc
       rhythmbox
       ispell
-      # xorg.xf86inputsynaptics
+      brasero
     ] ++
     [ 
       # Dev Stuff
@@ -202,7 +199,7 @@ in
       zarith
       batteries
       ocpIndent
-      # ppx_expect
+      alcotest
     ]) ++
     [ 
       # System Tools
@@ -284,7 +281,6 @@ in
 
   hardware.bumblebee = {
     enable = true;
-    # pmMethod = "bbswitch";
     driver = "nvidia";
     group = "video";
   };
@@ -293,11 +289,9 @@ in
     enable = true;
     layout = "us";
     xkbOptions = "ctrl:nocaps";
-    # synaptics.enable = true;
     # videoDriver = "nvidia";
     # displayManager.gdm.enable = true;
     displayManager.lightdm.enable = true;
-    # displayManager.sddm.enable = true;
     desktopManager.default = "gnome3";
 
     # Gnome3 Desktop Environment
