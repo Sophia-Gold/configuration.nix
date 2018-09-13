@@ -8,6 +8,7 @@ in
 
 {
   imports = [
+    <nixos-hardware/lenovo/thinkpad/t480s>
     ./hardware-configuration.nix    
     # ./opam2nix-packages.nix
   ];
