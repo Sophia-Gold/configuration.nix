@@ -78,7 +78,7 @@ in
                          async 
                          criterion
                          lens
-                         enumerator
+                         # enumerator
                          generic-deriving
                          singletons
                          logict
@@ -167,7 +167,7 @@ in
       python3
       puredata
       arduino
-      processing
+      # processing
       ocaml
       opam
       jbuilder
@@ -175,6 +175,8 @@ in
       heroku
       pari
       rustup
+      mercurial
+      darcs
     ] ++
     (with ocamlPackages; [
       # async
@@ -187,8 +189,8 @@ in
       findlib
       yojson
       zarith
-      batteries
-      ocpIndent
+      # batteries
+      # ocpIndent
       alcotest
     ]) ++
     [ 
@@ -219,6 +221,7 @@ in
       parted
       gparted
       binutils
+      unzip
     ] ++
     [(emacsWithPackages (with emacs25PackagesNg; [
       solarized-theme
@@ -280,7 +283,7 @@ in
     layout = "us";
     xkbOptions = "ctrl:nocaps";
     # videoDriver = "nvidia";
-    # displayManager.gdm.enable = true;
+    displayManager.gdm.enable = false;
     displayManager.lightdm.enable = true;
     desktopManager.default = "gnome3";
 
