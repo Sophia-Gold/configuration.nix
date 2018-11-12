@@ -54,6 +54,13 @@ in
     networkmanager.enable = true;
   };
 
+  hardware.u2f.enable = true;
+
+  hardware.pulseaudio = {
+    enable = true;
+    package = pkgs.pulseaudioFull;
+  };
+
   i18n = {
     consoleFont = "Lat2-Terminus16";
     consoleKeyMap = "us";
@@ -134,6 +141,8 @@ in
       rhythmbox
       ispell
       brasero
+      bluez
+      blueman
     ] ++
     [ 
       # Dev Stuff
@@ -298,7 +307,9 @@ in
 
     # KDE Desktop Manager
     # desktopManager.kde4.enable = true;
-    
+   
+    windowManager.i3.enable = true;
+ 
     # XMonad Window Manager
     # windowManager.xmonad = {
     #   enable = true;
