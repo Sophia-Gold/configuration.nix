@@ -143,6 +143,7 @@ in
       brasero
       bluez
       blueman
+      pandoc
     ] ++
     [ 
       # Dev Stuff
