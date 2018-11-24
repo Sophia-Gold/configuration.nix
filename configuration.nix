@@ -188,6 +188,7 @@ in
       mercurial
       darcs
       hydra
+      nox
     ] ++
     (with ocamlPackages; [
       # async
