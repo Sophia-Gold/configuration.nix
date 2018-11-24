@@ -187,6 +187,7 @@ in
       rustup
       mercurial
       darcs
+      hydra
     ] ++
     (with ocamlPackages; [
       # async
