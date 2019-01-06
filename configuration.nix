@@ -107,6 +107,8 @@ in
     findlib = "${ocamlPackages.findlib}/lib/ocaml/${ocamlVersion}/site-lib";
   };
 
+  programs.browserpass.enable = true;
+
   environment.systemPackages = with pkgs;
     [ 
       # unfree
@@ -144,6 +146,7 @@ in
       bluez
       blueman
       pandoc
+      # brave
     ] ++
     [ 
       # Dev Stuff
