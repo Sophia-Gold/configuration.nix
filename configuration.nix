@@ -191,6 +191,7 @@ in
       darcs
       hydra
       nox
+      coq
     ] ++
     (with ocamlPackages; [
       # async
@@ -272,6 +273,7 @@ in
       markdown-mode
       rust-mode
       toml-mode
+      proofgeneral
     ]))];
 
   environment.shellAliases.ghci = "ghci -ghci-script
