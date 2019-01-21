@@ -187,6 +187,7 @@ in
       heroku
       pari
       rustup
+      rustfmt
       mercurial
       darcs
       hydra
