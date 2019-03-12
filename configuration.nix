@@ -61,6 +61,11 @@ in
     package = pkgs.pulseaudioFull;
   };
 
+  hardware.sane = {
+    enable = true;
+    extraBackends = [ pkgs.hplipWithPlugin ];
+  };
+
   i18n = {
     consoleFont = "Lat2-Terminus16";
     consoleKeyMap = "us";
@@ -146,6 +151,8 @@ in
       blueman
       pandoc
       # brave
+      hplip
+      saneBackends
     ] ++
     [ 
       # Dev Stuff
@@ -274,7 +281,7 @@ in
       markdown-mode
       rust-mode
       toml-mode
-      proofgeneral
+      # proofgeneral
     ]))];
 
   environment.shellAliases.ghci = "ghci -ghci-script
