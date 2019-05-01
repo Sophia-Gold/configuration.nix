@@ -4,6 +4,9 @@ let
     ocamlPackages = pkgs.recurseIntoAttrs pkgs.ocamlPackages_latest;
     ocamlVersion = (builtins.parseDrvName ocamlPackages.ocaml.name).version;
     merlinWithEmacsMode = ocamlPackages.merlin.override { withEmacsMode = true; };
+
+    baseconfig = { allowUnfree = true; };
+    unstable = import <unstable> { config = baseconfig; };
 in
 
 {
@@ -72,12 +75,17 @@ in
     defaultLocale = "en_US.UTF-8";
   };
 
-
-  nixpkgs.config = {
+  nixpkgs.config = baseconfig // {
     allowUnfree = true;
-    allowBroken = true; 
+    allowBroken = true;
 
-    packageOverrides = pkgs: {
+    packageOverrides = super: let self = super.pkgs; in {
+
+       linuxPackages = super.linuxPackages_4_19.extend (self: super: {
+          nvidiaPackages = super.nvidiaPackages // {
+            stable = unstable.linuxPackages_4_19.nvidiaPackages.stable_418;
+          };
+        });
 
       packageKit = pkgs.packageKit.override {
         enableNixBackend = false;
@@ -89,7 +97,6 @@ in
                          async 
                          criterion
                          lens
-                         # enumerator
                          generic-deriving
                          singletons
                          logict
@@ -119,9 +126,9 @@ in
       google-chrome
       dropbox
       spotify
-      # skype
+      skype
       xflux
-      (oraclejdk8distro true true) 
+      # (oraclejdk8distro true true) 
     ] ++
     [
       patchelf
@@ -150,9 +157,10 @@ in
       bluez
       blueman
       pandoc
-      # brave
+      brave
       hplip
       saneBackends
+      audio-recorder
     ] ++
     [ 
       # Dev Stuff
@@ -186,7 +194,6 @@ in
       python3
       puredata
       arduino
-      # processing
       ocaml
       opam
       jbuilder
@@ -207,7 +214,7 @@ in
       # core
       js_of_ocaml
       js_of_ocaml-ppx
-      merlinWithEmacsMode
+      merlin
       # utop
       findlib
       yojson
@@ -256,7 +263,6 @@ in
       geiser
       paredit
       clojure-mode
-      clojure-cheatsheet
       cider
       haskell-mode
       idris-mode
