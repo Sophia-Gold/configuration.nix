@@ -80,17 +80,6 @@ in
     allowBroken = true;
 
     packageOverrides = super: let self = super.pkgs; in {
-
-       linuxPackages = super.linuxPackages_4_19.extend (self: super: {
-          nvidiaPackages = super.nvidiaPackages // {
-            stable = unstable.linuxPackages_4_19.nvidiaPackages.stable_418;
-          };
-        });
-
-      packageKit = pkgs.packageKit.override {
-        enableNixBackend = false;
-      };
-
       myHaskellEnv = pkgs.haskellPackages.ghcWithHoogle
                        (haskellPackages: with haskellPackages; [
                          arrows
@@ -161,6 +150,7 @@ in
       hplip
       saneBackends
       audio-recorder
+      gnupg
     ] ++
     [ 
       # Dev Stuff
@@ -209,18 +199,15 @@ in
       coq
     ] ++
     (with ocamlPackages; [
-      # async
-      lwt3
-      # core
-      js_of_ocaml
-      js_of_ocaml-ppx
+      # lwt3
+      # js_of_ocaml
+      # js_of_ocaml-ppx
       merlin
-      # utop
+      utop
       findlib
       yojson
       zarith
-      # batteries
-      # ocpIndent
+      batteries
       alcotest
     ]) ++
     [ 
@@ -252,8 +239,9 @@ in
       gparted
       binutils
       unzip
+      tree
     ] ++
-    [(emacsWithPackages (with emacs25PackagesNg; [
+    [(emacsWithPackages (with emacsPackagesNg; [
       solarized-theme
       lush-theme
       cyberpunk-theme
@@ -287,7 +275,7 @@ in
       markdown-mode
       rust-mode
       toml-mode
-      # proofgeneral
+      proofgeneral
     ]))];
 
   environment.shellAliases.ghci = "ghci -ghci-script
