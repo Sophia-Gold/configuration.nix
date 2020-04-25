@@ -53,7 +53,7 @@ in
   };
 
   networking = {
-    hostName = "_";
+    hostName = "pleroma";
     networkmanager.enable = true;
   };
 
@@ -69,11 +69,9 @@ in
     extraBackends = [ pkgs.hplipWithPlugin ];
   };
 
-  i18n = {
-    consoleFont = "Lat2-Terminus16";
-    consoleKeyMap = "us";
-    defaultLocale = "en_US.UTF-8";
-  };
+  console.font = "Lat2-Terminus16";
+  console.keyMap = "us";
+  i18n.defaultLocale = "en_US.UTF-8";
 
   nixpkgs.config = baseconfig // {
     allowUnfree = true;
@@ -101,6 +99,14 @@ in
                        ]);
       };
   };
+
+  nix.binaryCaches = [
+    "https://cache.nixos.org/"
+    "https://nixcache.reflex-frp.org"
+    "https://s3.eu-west-3.amazonaws.com/tezos-nix-cache"
+  ];
+
+  nix.binaryCachePublicKeys = [ "ryantrinkle.com-1:JJiAKaRv9mWgpVAz8dwewnZe0AzzEAzPkagE9SP5NWI=" "obsidian-tezos-kiln:WlSLNxlnEAdYvrwzxmNMTMrheSniCg6O4EhqCHsMvvo=" ];
           
   environment.variables = { 
     __GLVND_DISALLOW_PATCHING = "1";
@@ -118,6 +124,7 @@ in
       skype
       xflux
       # (oraclejdk8distro true true) 
+      # aliza
     ] ++
     [
       patchelf
@@ -194,7 +201,7 @@ in
       rustfmt
       mercurial
       darcs
-      hydra
+      # hydra
       nox
       coq
     ] ++
@@ -207,7 +214,7 @@ in
       findlib
       yojson
       zarith
-      batteries
+      # batteries
       alcotest
     ]) ++
     [ 
@@ -228,7 +235,7 @@ in
       tmux
       xorg.libpciaccess
       hfsprogs
-      dmg2img
+      # dmg2img
       mkinitcpio-nfs-utils
       p7zip
       dpkg
@@ -278,6 +285,8 @@ in
       proofgeneral
     ]))];
 
+  programs.gnupg.agent.enable = true;
+
   environment.shellAliases.ghci = "ghci -ghci-script
     ${pkgs.writeText "ghci.conf"
       '':def hoogle \s -> return $ ":! hoogle search -cl --count=15 \"" ++ s ++ "\""'
@@ -303,7 +312,6 @@ in
     # videoDriver = "nvidia";
     displayManager.gdm.enable = false;
     displayManager.lightdm.enable = true;
-    desktopManager.default = "gnome3";
 
     # Gnome3 Desktop Environment
     desktopManager.gnome3 = {
