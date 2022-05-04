@@ -57,8 +57,6 @@ in
     networkmanager.enable = true;
   };
 
-  hardware.u2f.enable = true;
-
   hardware.pulseaudio = {
     enable = true;
     package = pkgs.pulseaudioFull;
@@ -68,6 +66,8 @@ in
     enable = true;
     extraBackends = [ pkgs.hplipWithPlugin ];
   };
+
+  hardware.ledger.enable = true;
 
   console.font = "Lat2-Terminus16";
   console.keyMap = "us";
@@ -142,7 +142,6 @@ in
       simgrid
       git
       vim
-      brackets
       marp
       graphviz
       gifsicle
@@ -158,6 +157,8 @@ in
       saneBackends
       audio-recorder
       gnupg
+      # wineWowPackages.stable
+      (wine.override { wineBuild = "wine64"; })
     ] ++
     [ 
       # Dev Stuff
@@ -175,6 +176,7 @@ in
       go2nix
       myHaskellEnv
       stack
+      zlib
       cabal2nix
       nodejs
       closurecompiler
@@ -204,6 +206,9 @@ in
       # hydra
       nox
       coq
+      yarn
+      nodePackages.webpack
+      nodePackages.webpack-cli
     ] ++
     (with ocamlPackages; [
       # lwt3
@@ -282,7 +287,6 @@ in
       markdown-mode
       rust-mode
       toml-mode
-      proofgeneral
     ]))];
 
   programs.gnupg.agent.enable = true;
@@ -314,11 +318,11 @@ in
     displayManager.lightdm.enable = true;
 
     # Gnome3 Desktop Environment
-    desktopManager.gnome3 = {
+    desktopManager.gnome = {
      enable = true;
      sessionPath = [
-      pkgs.gnome3.gnome_shell
-      pkgs.gnome3.gnome-shell-extensions
+      pkgs.gnome.gnome_shell
+      pkgs.gnome.gnome-shell-extensions
      ];
     };
 
@@ -341,7 +345,7 @@ in
   };
 
   fonts = {
-     enableFontDir = true;
+     fontDir.enable = true;
      enableGhostscriptFonts = true;
      fonts = with pkgs; [
        corefonts  # Micrsoft free fonts
@@ -356,6 +360,10 @@ in
 
   users.extraUsers.guest = {
   };
+
+  users.users.guest.group = "guest";
+  users.groups.guest = {};
+  users.users.guest.isNormalUser = true;
 
   # NixOS Version
   system.stateVersion = "18.03";
