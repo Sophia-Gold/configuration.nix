@@ -38,7 +38,7 @@ in
     ];
  
     initrd.availableKernelModules = [
-      "xkhci_pci"
+      #"xkhci_pci"
       "ahci"
       "usb_storage"
       "sd_mod"
@@ -77,27 +77,27 @@ in
     allowUnfree = true;
     allowBroken = true;
 
-    packageOverrides = super: let self = super.pkgs; in {
-      myHaskellEnv = pkgs.haskellPackages.ghcWithHoogle
-                       (haskellPackages: with haskellPackages; [
-                         arrows
-                         async 
-                         criterion
-                         lens
-                         generic-deriving
-                         singletons
-                         logict
-                         either
-                         either-unwrap
-                         ghc-core 
-                         mueval 
-                         prelude-extras
-                         protolude
-                         idris
-                         cabal-install
-                         haskintex
-                       ]);
-      };
+    #packageOverrides = super: let self = super.pkgs; in {
+    #  myHaskellEnv = pkgs.haskellPackages.ghcWithHoogle
+    #                   (haskellPackages: with haskellPackages; [
+    #                     arrows
+    #                     async 
+    #                     criterion
+    #                     lens
+    #                     generic-deriving
+    #                     singletons
+    #                     logict
+    #                     either
+    #                     either-unwrap
+    #                     ghc-core 
+    #                     mueval 
+    #                     prelude-extras
+    #                     protolude
+    #                     idris
+    #                     cabal-install
+    #                     haskintex
+    #                   ]);
+    #  };
   };
 
   nix.binaryCaches = [
@@ -174,7 +174,7 @@ in
       openjdk
       go
       go2nix
-      myHaskellEnv
+      #myHaskellEnv
       stack
       zlib
       cabal2nix
