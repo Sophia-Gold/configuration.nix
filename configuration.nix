@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 let 
-    ocamlPackages = pkgs.recurseIntoAttrs pkgs.ocamlPackages_latest;
+    ocamlPackages = pkgs.recurseIntoAttrs pkgs.ocaml-ng.ocamlPackages_latest;
     ocamlVersion = (builtins.parseDrvName ocamlPackages.ocaml.name).version;
     merlinWithEmacsMode = ocamlPackages.merlin.override { withEmacsMode = true; };
 
@@ -22,7 +22,10 @@ in
         efiSysMountPoint = "/boot";
         canTouchEfiVariables = true;
       };
-      systemd-boot.enable = true;
+      systemd-boot = {
+        enable = true;
+        configurationLimit = 2;
+      };
     };
 
     kernelPackages = pkgs.linuxPackages_latest;
@@ -77,6 +80,11 @@ in
     allowUnfree = true;
     allowBroken = true;
 
+    permittedInsecurePackages = [
+      "python2.7-certifi-2021.10.8"
+      "python2.7-pyjwt-1.7.1"
+    ];
+
     #packageOverrides = super: let self = super.pkgs; in {
     #  myHaskellEnv = pkgs.haskellPackages.ghcWithHoogle
     #                   (haskellPackages: with haskellPackages; [
@@ -121,7 +129,6 @@ in
       google-chrome
       dropbox
       spotify
-      skype
       xflux
       # (oraclejdk8distro true true) 
       # aliza
@@ -142,7 +149,6 @@ in
       simgrid
       git
       vim
-      marp
       graphviz
       gifsicle
       vlc
@@ -154,10 +160,8 @@ in
       pandoc
       brave
       hplip
-      saneBackends
       audio-recorder
       gnupg
-      # wineWowPackages.stable
       (wine.override { wineBuild = "wine64"; })
     ] ++
     [ 
@@ -195,7 +199,7 @@ in
       arduino
       ocaml
       opam
-      jbuilder
+      dune_1
       docker
       heroku
       pari
@@ -203,7 +207,6 @@ in
       rustfmt
       mercurial
       darcs
-      # hydra
       nox
       coq
       yarn
@@ -211,15 +214,11 @@ in
       nodePackages.webpack-cli
     ] ++
     (with ocamlPackages; [
-      # lwt3
-      # js_of_ocaml
-      # js_of_ocaml-ppx
       merlin
-      utop
+      #utop
       findlib
       yojson
       zarith
-      # batteries
       alcotest
     ]) ++
     [ 
@@ -321,7 +320,7 @@ in
     desktopManager.gnome = {
      enable = true;
      sessionPath = [
-      pkgs.gnome.gnome_shell
+      pkgs.gnome.gnome-shell
       pkgs.gnome.gnome-shell-extensions
      ];
     };
